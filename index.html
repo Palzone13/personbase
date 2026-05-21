@@ -123,6 +123,8 @@
   .chip { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
   .chip-active { background: var(--green-bg); color: var(--green); }
   .chip-inactive { background: var(--bg4); color: var(--txt3); }
+  .chip-company { background: rgba(246,173,85,0.12); color: var(--amber); border: 1px solid rgba(246,173,85,0.25); font-size: 10px; padding: 2px 7px; }
+  .rank-tag { font-size: 10px; color: var(--txt3); font-family: var(--mono); margin-left: 4px; }
   td.mono { font-family: var(--mono); font-size: 12px; color: var(--txt2); }
   .btn-icon { background: none; border: none; cursor: pointer; color: var(--txt3); padding: 5px; border-radius: 6px; display: inline-flex; align-items: center; transition: background .15s, color .15s; }
   .btn-icon:hover { background: var(--bg4); color: var(--red); }
@@ -248,6 +250,7 @@
         <input type="text" id="search-input" placeholder="Search by name, ID, address…" />
       </div>
       <select id="filter-dept"><option value="">All departments</option></select>
+      <select id="filter-company"><option value="">All companies</option></select>
       <select id="filter-status"><option value="">All statuses</option><option>Active</option><option>Inactive</option></select>
       <div class="divider"></div>
       <button class="btn-add" onclick="openModal()">
@@ -267,12 +270,13 @@
             <th style="width:160px">Address</th>
             <th style="width:150px">Parent / Guardian</th>
             <th style="width:110px">Department</th>
+            <th style="width:130px">Company / Group</th>
             <th style="width:80px">Status</th>
             <th style="width:44px"></th>
           </tr>
         </thead>
         <tbody id="table-body">
-          <tr class="loading-row"><td colspan="9"><span class="spinner"></span>Loading records…</td></tr>
+          <tr class="loading-row"><td colspan="10"><span class="spinner"></span>Loading records…</td></tr>
         </tbody>
       </table>
       <div class="pagination">
@@ -367,6 +371,19 @@
 
       <div class="form-section">
         <div class="section-label">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h20"/></svg>
+          Company / Group <span style="font-size:10px;color:var(--txt3);font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px;">(optional)</span>
+        </div>
+        <div class="field-grid">
+          <div class="field"><label>Company / Group Name</label><input id="f-company" placeholder="e.g. Acme Corp, Team Alpha" /></div>
+          <div class="field"><label>Rank / Role in Group</label><input id="f-rank" placeholder="e.g. Manager, Captain, Intern" /></div>
+          <div class="field"><label>Group ID / Code</label><input id="f-group-id" placeholder="e.g. GRP-001" /></div>
+          <div class="field"><label>Division / Unit</label><input id="f-division" placeholder="e.g. Sales, North Division" /></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">
           <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           Enrollment &amp; Status
         </div>
@@ -423,7 +440,7 @@ let allRecords = [];
 let editId = null;
 let page = 1;
 const PER = 10;
-let searchQ = '', filterDept = '', filterStatus = '';
+let searchQ = '', filterDept = '', filterStatus = '', filterCompany = '';
 
 async function apiFetch(path, opts = {}) {
   const res = await fetch(`${SUPA_URL}/${path}`, { headers: HEADERS, ...opts });
@@ -442,7 +459,7 @@ async function loadAll() {
   } catch(e) {
     setBadge('error');
     toast('Failed to load: ' + e.message, 'error');
-    document.getElementById('table-body').innerHTML = `<tr class="loading-row"><td colspan="9">Could not connect to database.</td></tr>`;
+    document.getElementById('table-body').innerHTML = `<tr class="loading-row"><td colspan="10">Could not connect to database.</td></tr>`;
     document.getElementById('page-info').textContent = 'Error';
   }
 }
@@ -470,8 +487,11 @@ function getFiltered() {
     const name = ((r.first_name||'') + ' ' + (r.last_name||'')).toLowerCase();
     const mQ = !q || name.includes(q) || (r.record_id||'').toLowerCase().includes(q)
       || (r.street||'').toLowerCase().includes(q) || (r.city||'').toLowerCase().includes(q)
-      || (r.guardian_name||'').toLowerCase().includes(q);
-    return mQ && (!filterDept || r.department === filterDept) && (!filterStatus || r.status === filterStatus);
+      || (r.guardian_name||'').toLowerCase().includes(q)
+      || (r.company||'').toLowerCase().includes(q) || (r.rank||'').toLowerCase().includes(q);
+    return mQ && (!filterDept || r.department === filterDept)
+      && (!filterStatus || r.status === filterStatus)
+      && (!filterCompany || r.company === filterCompany);
   });
 }
 
@@ -487,11 +507,14 @@ function render() {
 
   const tbody = document.getElementById('table-body');
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><p>No records found. <span onclick="openModal()">Add the first one →</span></p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><p>No records found. <span onclick="openModal()">Add the first one →</span></p></div></td></tr>`;
   } else {
     tbody.innerHTML = slice.map(r => {
       const ini = initials(r.first_name, r.last_name);
       const addr = [r.street, r.city].filter(Boolean).join(', ') || '—';
+      const companyCell = r.company
+        ? `<span class="chip chip-company">${r.company}</span>${r.rank ? `<span class="rank-tag">${r.rank}</span>` : ''}`
+        : '—';
       return `<tr class="data-row" onclick="openModal('${r.id}')">
         <td><div class="cell-name"><span class="avatar">${ini||'?'}</span>${r.first_name||''} ${r.last_name||''}</div></td>
         <td class="mono">${r.record_id||'—'}</td>
@@ -500,6 +523,7 @@ function render() {
         <td title="${addr}">${addr}</td>
         <td title="${r.guardian_name||''}">${r.guardian_name||'—'}</td>
         <td>${r.department||'—'}</td>
+        <td>${companyCell}</td>
         <td><span class="chip ${r.status==='Active'?'chip-active':'chip-inactive'}">${r.status||'—'}</span></td>
         <td><button class="btn-icon" onclick="delRecord(event,'${r.id}')" title="Delete">
           <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
@@ -523,6 +547,11 @@ function render() {
   const ds = document.getElementById('filter-dept');
   const curD = ds.value;
   ds.innerHTML = '<option value="">All departments</option>' + depts.map(d => `<option${d===curD?' selected':''}>${d}</option>`).join('');
+
+  const companies = [...new Set(allRecords.map(r => r.company).filter(Boolean))];
+  const cs = document.getElementById('filter-company');
+  const curC = cs.value;
+  cs.innerHTML = '<option value="">All companies</option>' + companies.map(c => `<option${c===curC?' selected':''}>${c}</option>`).join('');
 
   document.getElementById('page-info').textContent = filtered.length
     ? `${(page-1)*PER+1}–${Math.min(page*PER,filtered.length)} of ${filtered.length} records`
@@ -552,7 +581,8 @@ function openModal(id) {
     'f-country': r.country || 'United States', 'f-guardian': r.guardian_name, 'f-rel': r.guardian_rel,
     'f-gphone': r.guardian_phone, 'f-gemail': r.guardian_email,
     'f-ename': r.emergency_name, 'f-erel': r.emergency_rel, 'f-ephone': r.emergency_phone,
-    'f-enroll': r.enrolled_date, 'f-status': r.status || 'Active', 'f-notes': r.notes
+    'f-enroll': r.enrolled_date, 'f-status': r.status || 'Active', 'f-notes': r.notes,
+    'f-company': r.company, 'f-rank': r.rank, 'f-group-id': r.group_id, 'f-division': r.division
   };
   Object.entries(map).forEach(([fid, val]) => { const el = document.getElementById(fid); if (el) el.value = val || ''; });
   document.getElementById('modal').classList.add('open');
@@ -578,7 +608,9 @@ async function saveRecord() {
     emergency_name: g('f-ename') || null, emergency_rel: g('f-erel') || null,
     emergency_phone: g('f-ephone') || null,
     enrolled_date: g('f-enroll') || null, status: g('f-status') || 'Active',
-    notes: g('f-notes') || null
+    notes: g('f-notes') || null,
+    company: g('f-company') || null, rank: g('f-rank') || null,
+    group_id: g('f-group-id') || null, division: g('f-division') || null
   };
 
   const btn = document.getElementById('btn-save');
@@ -623,6 +655,7 @@ document.getElementById('search-input').addEventListener('input', e => {
   searchTimer = setTimeout(() => { searchQ = e.target.value; page = 1; render(); }, 200);
 });
 document.getElementById('filter-dept').addEventListener('change', e => { filterDept = e.target.value; page = 1; render(); });
+document.getElementById('filter-company').addEventListener('change', e => { filterCompany = e.target.value; page = 1; render(); });
 document.getElementById('filter-status').addEventListener('change', e => { filterStatus = e.target.value; page = 1; render(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 

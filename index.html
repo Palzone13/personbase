@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PersonBase — Records Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d0f14; --bg2: #13151c; --bg3: #1a1d27; --bg4: #222636;
+    --line: rgba(255,255,255,0.07); --line2: rgba(255,255,255,0.12);
+    --txt: #e8eaf0; --txt2: #8a8fa8; --txt3: #555a72;
+    --accent: #4f6ef7; --accent2: #3a56d4; --accent-glow: rgba(79,110,247,0.15);
+    --green: #2dd4a0; --green-bg: rgba(45,212,160,0.1);
+    --red: #f56565; --red-bg: rgba(245,101,101,0.1);
+    --amber: #f6ad55; --amber-bg: rgba(246,173,85,0.1);
+    --radius: 8px; --radius-lg: 12px;
+    --font: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
+    --shadow-lg: 0 8px 48px rgba(0,0,0,0.6);
+  }
+  html, body { height: 100%; }
+  body { font-family: var(--font); background: var(--bg); color: var(--txt); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+  .app { display: flex; flex-direction: column; min-height: 100vh; }
+
+  header {
+    background: var(--bg2); border-bottom: 1px solid var(--line);
+    padding: 0 2rem; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-mark { width: 34px; height: 34px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .logo-mark svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+  .logo-name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .logo-sub { font-size: 10px; color: var(--txt3); letter-spacing: .1em; text-transform: uppercase; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .badge { font-size: 11px; padding: 3px 10px; border-radius: 4px; background: var(--bg4); border: 1px solid var(--line2); color: var(--txt2); font-family: var(--mono); }
+  .badge.accent { background: var(--accent-glow); border-color: rgba(79,110,247,0.3); color: var(--accent); }
+  .badge.green { background: var(--green-bg); border-color: rgba(45,212,160,0.3); color: var(--green); }
+  .badge.red { background: var(--red-bg); border-color: rgba(245,101,101,0.3); color: var(--red); }
+
+  main { flex: 1; padding: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+  .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 2rem; }
+  .stat-card { background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; position: relative; overflow: hidden; transition: border-color .2s; }
+  .stat-card:hover { border-color: var(--line2); }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity .2s; }
+  .stat-card:hover::before { opacity: 1; }
+  .stat-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--txt3); margin-bottom: 8px; }
+  .stat-val { font-size: 28px; font-weight: 300; color: var(--txt); font-family: var(--mono); }
+
+  .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: .75rem 1rem; }
+  .search-wrap { flex: 1; position: relative; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--txt3); fill: none; stroke-width: 2; stroke-linecap: round; pointer-events: none; }
+  .toolbar input[type="text"] { width: 100%; background: var(--bg3); border: 1px solid var(--line); color: var(--txt); font-family: var(--font); font-size: 13px; padding: 7px 10px 7px 34px; border-radius: var(--radius); outline: none; transition: border-color .15s; }
+  .toolbar input[type="text"]:focus { border-color: var(--accent); }
+  .toolbar input[type="text"]::placeholder { color: var(--txt3); }
+  .toolbar select { background: var(--bg3); border: 1px solid var(--line); color: var(--txt2); font-family: var(--font); font-size: 13px; padding: 7px 28px 7px 10px; border-radius: var(--radius); outline: none; -webkit-appearance: none; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555a72' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; transition: border-color .15s; }
+  .toolbar select:focus { border-color: var(--accent); }
+  .divider { width: 1px; height: 28px; background: var(--line2); }
+  .btn-add { display: flex; align-items: center; gap: 7px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 16px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .1s; }
+  .btn-add:hover { background: var(--accent2); }
+  .btn-add:active { transform: scale(.98); }
+  .btn-add svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+  .table-wrap { background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  thead { background: var(--bg3); }
+  th { padding: 11px 14px; text-align: left; font-size: 11px; font-weight: 500; color: var(--txt3); text-transform: uppercase; letter-spacing: .07em; border-bottom: 1px solid var(--line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--txt); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background .1s; }
+  tr:last-child td { border-bottom: none; }
+  tr.data-row:hover td { background: var(--bg3); cursor: pointer; }
+  .cell-name { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--bg4); border: 1px solid var(--line2); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--accent); flex-shrink: 0; font-family: var(--mono); }
+  .chip { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
+  .chip-active { background: var(--green-bg); color: var(--green); }
+  .chip-inactive { background: var(--bg4); color: var(--txt3); }
+  td.mono { font-family: var(--mono); font-size: 12px; color: var(--txt2); }
+  .btn-icon { background: none; border: none; cursor: pointer; color: var(--txt3); padding: 5px; border-radius: 6px; display: inline-flex; align-items: center; transition: background .15s, color .15s; }
+  .btn-icon:hover { background: var(--bg4); color: var(--red); }
+  .btn-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .empty-state { padding: 4rem; text-align: center; color: var(--txt3); }
+  .empty-state p { font-size: 14px; }
+  .empty-state span { color: var(--accent); cursor: pointer; }
+  .empty-state span:hover { text-decoration: underline; }
+
+  .pagination { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--txt3); }
+  .page-btns { display: flex; gap: 4px; }
+  .pg-btn { padding: 5px 11px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg3); font-size: 12px; cursor: pointer; color: var(--txt2); font-family: var(--mono); transition: background .15s, border-color .15s; }
+  .pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .pg-btn:hover:not(.active) { background: var(--bg4); border-color: var(--line2); }
+
+  /* loading overlay */
+  .loading-row td { text-align: center; padding: 3rem; color: var(--txt3); font-size: 13px; }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--line2); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* toast */
+  .toast-wrap { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+  .toast { background: var(--bg3); border: 1px solid var(--line2); border-radius: var(--radius); padding: 10px 16px; font-size: 13px; color: var(--txt); display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: none; }
+  .toast.success { border-color: rgba(45,212,160,0.3); }
+  .toast.error { border-color: rgba(245,101,101,0.3); }
+  .toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .toast.success .toast-dot { background: var(--green); }
+  .toast.error .toast-dot { background: var(--red); }
+
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1.5rem; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--line2); border-radius: var(--radius-lg); width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: modalIn .2s ease; }
+  @keyframes modalIn { from { opacity:0; transform: translateY(12px) scale(.98); } to { opacity:1; transform: none; } }
+  .modal::-webkit-scrollbar { width: 4px; }
+  .modal::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg2); z-index: 2; }
+  .modal-head h2 { font-size: 15px; font-weight: 600; }
+  .modal-head p { font-size: 12px; color: var(--txt3); margin-top: 2px; }
+  .btn-close { width: 30px; height: 30px; border-radius: 6px; background: var(--bg3); border: 1px solid var(--line); color: var(--txt2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+  .btn-close:hover { background: var(--bg4); }
+  .btn-close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--accent-glow); display: flex; align-items: center; gap: 8px; }
+  .section-label svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .field-grid.full { grid-template-columns: 1fr; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.span2 { grid-column: span 2; }
+  .field label { font-size: 11px; font-weight: 500; color: var(--txt3); letter-spacing: .03em; }
+  .field input, .field select, .field textarea { background: var(--bg3); border: 1px solid var(--line); color: var(--txt); font-family: var(--font); font-size: 13px; padding: 8px 11px; border-radius: var(--radius); outline: none; transition: border-color .15s, background .15s; width: 100%; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--txt3); }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); background: var(--bg4); }
+  .field select { -webkit-appearance: none; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555a72' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+  .field textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+  .modal-foot { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 1rem 1.5rem; border-top: 1px solid var(--line); position: sticky; bottom: 0; background: var(--bg2); z-index: 2; }
+  .modal-foot .record-id { flex: 1; font-family: var(--mono); font-size: 11px; color: var(--txt3); }
+  .btn-cancel { background: var(--bg3); border: 1px solid var(--line); color: var(--txt2); font-family: var(--font); font-size: 13px; padding: 8px 18px; border-radius: var(--radius); cursor: pointer; transition: background .15s; }
+  .btn-cancel:hover { background: var(--bg4); }
+  .btn-save { background: var(--accent); color: #fff; border: none; font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 20px; border-radius: var(--radius); cursor: pointer; transition: background .15s, transform .1s; display: flex; align-items: center; gap: 6px; }
+  .btn-save:hover { background: var(--accent2); }
+  .btn-save:active { transform: scale(.98); }
+  .btn-save:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-save .save-spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+  .btn-save.saving .save-spinner { display: block; }
+
+  footer { padding: .75rem 2rem; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--txt3); font-family: var(--mono); }
+
+  @media (max-width: 900px) { .stats { grid-template-columns: repeat(2,1fr); } main { padding: 1rem; } header { padding: 0 1rem; } }
+  @media (max-width: 600px) { .stats { grid-template-columns: 1fr 1fr; } .toolbar { flex-wrap: wrap; } .divider { display: none; } .field-grid, .field-grid.cols-3 { grid-template-columns: 1fr; } .field.span2 { grid-column: span 1; } }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+      </div>
+      <div>
+        <div class="logo-name">PersonBase</div>
+        <div class="logo-sub">Records Management System</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="badge">Supabase</span>
+      <span class="badge accent" id="conn-badge">● Connecting…</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="stats">
+      <div class="stat-card"><div class="stat-label">Total Records</div><div class="stat-val" id="stat-total">—</div></div>
+      <div class="stat-card"><div class="stat-label">Active</div><div class="stat-val" id="stat-active">—</div></div>
+      <div class="stat-card"><div class="stat-label">Added This Month</div><div class="stat-val" id="stat-month">—</div></div>
+      <div class="stat-card"><div class="stat-label">Departments</div><div class="stat-val" id="stat-dept">—</div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Search by name, ID, address…" />
+      </div>
+      <select id="filter-dept"><option value="">All departments</option></select>
+      <select id="filter-status"><option value="">All statuses</option><option>Active</option><option>Inactive</option></select>
+      <div class="divider"></div>
+      <button class="btn-add" onclick="openModal()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Record
+      </button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:190px">Name</th>
+            <th style="width:100px">Record ID</th>
+            <th style="width:100px">Date of Birth</th>
+            <th style="width:120px">Phone</th>
+            <th style="width:160px">Address</th>
+            <th style="width:150px">Parent / Guardian</th>
+            <th style="width:110px">Department</th>
+            <th style="width:80px">Status</th>
+            <th style="width:44px"></th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr class="loading-row"><td colspan="9"><span class="spinner"></span>Loading records…</td></tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <span id="page-info">Loading…</span>
+        <div class="page-btns" id="page-btns"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>PersonBase RMS © 2025 · Supabase Backend</span>
+    <span id="footer-ts"></span>
+  </footer>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="modal-title">New Record</h2>
+        <p id="modal-sub">Fill in the fields below to create a new record.</p>
+      </div>
+      <button class="btn-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-section">
+        <div class="section-label">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Personal Information
+        </div>
+        <div class="field-grid">
+          <div class="field"><label>First Name</label><input id="f-first" placeholder="First name" /></div>
+          <div class="field"><label>Last Name</label><input id="f-last" placeholder="Last name" /></div>
+          <div class="field"><label>Date of Birth</label><input id="f-dob" type="date" /></div>
+          <div class="field"><label>Gender</label>
+            <select id="f-gender"><option value="">— Select —</option><option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option></select>
+          </div>
+          <div class="field"><label>Record / Student ID</label><input id="f-rid" placeholder="e.g. STU-00001" /></div>
+          <div class="field"><label>Department / Grade</label><input id="f-dept" placeholder="e.g. Grade 10 · Admin" /></div>
+          <div class="field"><label>Email Address</label><input id="f-email" type="email" placeholder="user@domain.com" /></div>
+          <div class="field"><label>Phone Number</label><input id="f-phone" placeholder="+1 (000) 000-0000" /></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Home Address
+        </div>
+        <div class="field-grid full"><div class="field"><label>Street Address</label><input id="f-street" placeholder="123 Main Street" /></div></div>
+        <div class="field-grid cols-3" style="margin-top:12px">
+          <div class="field"><label>City</label><input id="f-city" placeholder="City" /></div>
+          <div class="field"><label>State / Province</label><input id="f-state" placeholder="State" /></div>
+          <div class="field"><label>ZIP / Postal Code</label><input id="f-zip" placeholder="00000" /></div>
+        </div>
+        <div class="field-grid full" style="margin-top:12px"><div class="field"><label>Country</label><input id="f-country" placeholder="Country" value="United States" /></div></div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Parent / Guardian
+        </div>
+        <div class="field-grid">
+          <div class="field"><label>Guardian Full Name</label><input id="f-guardian" placeholder="Full name" /></div>
+          <div class="field"><label>Relationship</label>
+            <select id="f-rel"><option value="">— Select —</option><option>Mother</option><option>Father</option><option>Grandparent</option><option>Legal guardian</option><option>Other</option></select>
+          </div>
+          <div class="field"><label>Guardian Phone</label><input id="f-gphone" placeholder="+1 (000) 000-0000" /></div>
+          <div class="field"><label>Guardian Email</label><input id="f-gemail" type="email" placeholder="email@domain.com" /></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">
+          <svg viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Emergency Contact
+        </div>
+        <div class="field-grid">
+          <div class="field"><label>Contact Name</label><input id="f-ename" placeholder="Full name" /></div>
+          <div class="field"><label>Relationship</label><input id="f-erel" placeholder="e.g. Uncle, Neighbor" /></div>
+          <div class="field span2"><label>Emergency Phone</label><input id="f-ephone" placeholder="+1 (000) 000-0000" /></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Enrollment &amp; Status
+        </div>
+        <div class="field-grid">
+          <div class="field"><label>Enrollment / Start Date</label><input id="f-enroll" type="date" /></div>
+          <div class="field"><label>Record Status</label><select id="f-status"><option>Active</option><option>Inactive</option></select></div>
+        </div>
+        <div class="field-grid full" style="margin-top:12px"><div class="field"><label>Notes</label><textarea id="f-notes" placeholder="Any additional notes, medical info, accommodations…"></textarea></div></div>
+      </div>
+    </div>
+
+    <div class="modal-foot">
+      <span class="record-id" id="modal-record-id"></span>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" id="btn-save" onclick="saveRecord()">
+        <span class="save-spinner"></span>
+        Save Record
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPA_URL = 'https://vpfjkwixanosuyubxkkq.supabase.co/rest/v1';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwZmprd2l4YW5vc3V5dWJ4a2txIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODkyMjIsImV4cCI6MjA5NDk2NTIyMn0.2jl16Rz170II2i-QVsXnRjJUoyoCYnEcfNzF9FdxbQ4';
+const HEADERS = { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+const TABLE = 'persons';
+
+let allRecords = [];
+let editId = null;
+let page = 1;
+const PER = 10;
+let searchQ = '', filterDept = '', filterStatus = '';
+
+// ── API ──
+async function apiFetch(path, opts = {}) {
+  const res = await fetch(`${SUPA_URL}/${path}`, { headers: HEADERS, ...opts });
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.message || e.hint || res.statusText); }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+async function loadAll() {
+  setBadge('connecting');
+  try {
+    const data = await apiFetch(`${TABLE}?order=created_at.desc&limit=1000`);
+    allRecords = data || [];
+    setBadge('connected');
+    render();
+  } catch(e) {
+    setBadge('error');
+    toast('Failed to load: ' + e.message, 'error');
+    document.getElementById('table-body').innerHTML = `<tr class="loading-row"><td colspan="9">Could not connect to database.</td></tr>`;
+    document.getElementById('page-info').textContent = 'Error';
+  }
+}
+
+// ── BADGE ──
+function setBadge(state) {
+  const b = document.getElementById('conn-badge');
+  if (state === 'connected') { b.textContent = '● Connected'; b.className = 'badge green'; }
+  else if (state === 'error') { b.textContent = '● Disconnected'; b.className = 'badge red'; }
+  else { b.textContent = '● Connecting…'; b.className = 'badge accent'; }
+}
+
+// ── TOAST ──
+function toast(msg, type = 'success') {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="toast-dot"></span>${msg}`;
+  wrap.appendChild(el);
+  requestAnimationFrame(() => { requestAnimationFrame(() => el.classList.add('show')); });
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+// ── FILTER ──
+function getFiltered() {
+  const q = searchQ.toLowerCase();
+  return allRecords.filter(r => {
+    const name = ((r.first_name||'') + ' ' + (r.last_name||'')).toLowerCase();
+    const mQ = !q || name.includes(q) || (r.record_id||'').toLowerCase().includes(q)
+      || (r.street||'').toLowerCase().includes(q) || (r.city||'').toLowerCase().includes(q)
+      || (r.guardian_name||'').toLowerCase().includes(q);
+    return mQ && (!filterDept || r.department === filterDept) && (!filterStatus || r.status === filterStatus);
+  });
+}
+
+function initials(f, l) {
+  return ((f||'')[0]||'').toUpperCase() + ((l||'')[0]||'').toUpperCase();
+}
+
+// ── RENDER ──
+function render() {
+  const filtered = getFiltered();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER));
+  if (page > totalPages) page = totalPages;
+  const slice = filtered.slice((page-1)*PER, page*PER);
+
+  const tbody = document.getElementById('table-body');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><p>No records found. <span onclick="openModal()">Add the first one →</span></p></div></td></tr>`;
+  } else {
+    tbody.innerHTML = slice.map(r => {
+      const ini = initials(r.first_name, r.last_name);
+      const addr = [r.street, r.city].filter(Boolean).join(', ') || '—';
+      return `<tr class="data-row" onclick="openModal('${r.id}')">
+        <td><div class="cell-name"><span class="avatar">${ini||'?'}</span>${r.first_name||''} ${r.last_name||''}</div></td>
+        <td class="mono">${r.record_id||'—'}</td>
+        <td class="mono">${r.dob||'—'}</td>
+        <td>${r.phone||'—'}</td>
+        <td title="${addr}">${addr}</td>
+        <td title="${r.guardian_name||''}">${r.guardian_name||'—'}</td>
+        <td>${r.department||'—'}</td>
+        <td><span class="chip ${r.status==='Active'?'chip-active':'chip-inactive'}">${r.status||'—'}</span></td>
+        <td><button class="btn-icon" onclick="delRecord(event,'${r.id}')" title="Delete">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // stats
+  const now = new Date();
+  const thisMonth = allRecords.filter(r => {
+    if (!r.created_at) return false;
+    const d = new Date(r.created_at);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+  const depts = [...new Set(allRecords.map(r => r.department).filter(Boolean))];
+  document.getElementById('stat-total').textContent = allRecords.length;
+  document.getElementById('stat-active').textContent = allRecords.filter(r => r.status === 'Active').length;
+  document.getElementById('stat-month').textContent = thisMonth;
+  document.getElementById('stat-dept').textContent = depts.length;
+
+  // dept filter
+  const ds = document.getElementById('filter-dept');
+  const curD = ds.value;
+  ds.innerHTML = '<option value="">All departments</option>' + depts.map(d => `<option${d===curD?' selected':''}>${d}</option>`).join('');
+
+  // pagination
+  document.getElementById('page-info').textContent = filtered.length
+    ? `${(page-1)*PER+1}–${Math.min(page*PER,filtered.length)} of ${filtered.length} records`
+    : 'No records';
+  const pb = document.getElementById('page-btns');
+  pb.innerHTML = '';
+  for (let p2 = 1; p2 <= totalPages; p2++) {
+    const b = document.createElement('button');
+    b.className = 'pg-btn' + (p2 === page ? ' active' : '');
+    b.textContent = p2;
+    b.onclick = () => { page = p2; render(); };
+    pb.appendChild(b);
+  }
+}
+
+// ── MODAL ──
+function openModal(id) {
+  editId = id || null;
+  const isEdit = editId !== null;
+  const r = isEdit ? allRecords.find(x => x.id === id) || {} : {};
+  document.getElementById('modal-title').textContent = isEdit ? 'Edit Record' : 'New Record';
+  document.getElementById('modal-sub').textContent = isEdit ? 'Update the fields below.' : 'Fill in the fields below to create a new record.';
+  document.getElementById('modal-record-id').textContent = isEdit ? `UUID: ${r.id}` : '';
+  const map = {
+    'f-first': r.first_name, 'f-last': r.last_name, 'f-dob': r.dob, 'f-gender': r.gender,
+    'f-rid': r.record_id, 'f-dept': r.department, 'f-email': r.email, 'f-phone': r.phone,
+    'f-street': r.street, 'f-city': r.city, 'f-state': r.state, 'f-zip': r.zip,
+    'f-country': r.country || 'United States', 'f-guardian': r.guardian_name, 'f-rel': r.guardian_rel,
+    'f-gphone': r.guardian_phone, 'f-gemail': r.guardian_email,
+    'f-ename': r.emergency_name, 'f-erel': r.emergency_rel, 'f-ephone': r.emergency_phone,
+    'f-enroll': r.enrolled_date, 'f-status': r.status || 'Active', 'f-notes': r.notes
+  };
+  Object.entries(map).forEach(([fid, val]) => { const el = document.getElementById(fid); if (el) el.value = val || ''; });
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); editId = null; }
+function closeModalBg(e) { if (e.target.id === 'modal') closeModal(); }
+
+async function saveRecord() {
+  const g = id => (document.getElementById(id)||{}).value || '';
+  const first = g('f-first').trim(), last = g('f-last').trim();
+  if (!first && !last) { toast('First or last name is required.', 'error'); return; }
+
+  const payload = {
+    first_name: first, last_name: last,
+    dob: g('f-dob') || null, gender: g('f-gender') || null,
+    record_id: g('f-rid') || null, department: g('f-dept') || null,
+    email: g('f-email') || null, phone: g('f-phone') || null,
+    street: g('f-street') || null, city: g('f-city') || null,
+    state: g('f-state') || null, zip: g('f-zip') || null, country: g('f-country') || null,
+    guardian_name: g('f-guardian') || null, guardian_rel: g('f-rel') || null,
+    guardian_phone: g('f-gphone') || null, guardian_email: g('f-gemail') || null,
+    emergency_name: g('f-ename') || null, emergency_rel: g('f-erel') || null,
+    emergency_phone: g('f-ephone') || null,
+    enrolled_date: g('f-enroll') || null, status: g('f-status') || 'Active',
+    notes: g('f-notes') || null
+  };
+
+  const btn = document.getElementById('btn-save');
+  btn.classList.add('saving'); btn.disabled = true;
+
+  try {
+    if (editId) {
+      const updated = await apiFetch(`${TABLE}?id=eq.${editId}`, { method: 'PATCH', body: JSON.stringify(payload) });
+      const idx = allRecords.findIndex(r => r.id === editId);
+      if (idx !== -1 && updated?.[0]) allRecords[idx] = updated[0];
+      toast('Record updated successfully.');
+    } else {
+      const created = await apiFetch(TABLE, { method: 'POST', body: JSON.stringify(payload) });
+      if (created?.[0]) allRecords.unshift(created[0]);
+      toast('Record created successfully.');
+    }
+    closeModal();
+    render();
+  } catch(e) {
+    toast('Save failed: ' + e.message, 'error');
+  } finally {
+    btn.classList.remove('saving'); btn.disabled = false;
+  }
+}
+
+async function delRecord(e, id) {
+  e.stopPropagation();
+  if (!confirm('Delete this record? This cannot be undone.')) return;
+  try {
+    await apiFetch(`${TABLE}?id=eq.${id}`, { method: 'DELETE' });
+    allRecords = allRecords.filter(r => r.id !== id);
+    toast('Record deleted.');
+    render();
+  } catch(err) {
+    toast('Delete failed: ' + err.message, 'error');
+  }
+}
+
+// ── EVENTS ──
+let searchTimer;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => { searchQ = e.target.value; page = 1; render(); }, 200);
+});
+document.getElementById('filter-dept').addEventListener('change', e => { filterDept = e.target.value; page = 1; render(); });
+document.getElementById('filter-status').addEventListener('change', e => { filterStatus = e.target.value; page = 1; render(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function tick() { document.getElementById('footer-ts').textContent = new Date().toLocaleString(); }
+tick(); setInterval(tick, 1000);
+
+loadAll();
+</script>
+</body>
+</html>

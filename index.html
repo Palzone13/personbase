@@ -20,62 +20,33 @@
     --font: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
     --shadow-lg: 0 8px 48px rgba(0,0,0,0.6);
   }
+  *, *::before, *::after { box-sizing: border-box; }
   html, body { height: 100%; }
   body { font-family: var(--font); background: var(--bg); color: var(--txt); font-size: 14px; line-height: 1.5; min-height: 100vh; }
   .app { display: flex; flex-direction: column; min-height: 100vh; }
 
-  /* ── PASSWORD GATE ── */
-  #gate {
-    position: fixed; inset: 0; background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 9999; padding: 1.5rem;
-  }
-  .gate-box {
-    background: var(--bg2); border: 1px solid var(--line2);
-    border-radius: var(--radius-lg); padding: 2.5rem 2rem;
-    width: 100%; max-width: 380px;
-    box-shadow: var(--shadow-lg); text-align: center;
-  }
+  /* ── GATE ── */
+  #gate { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 1.5rem; }
+  .gate-box { background: var(--bg2); border: 1px solid var(--line2); border-radius: var(--radius-lg); padding: 2.5rem 2rem; width: 100%; max-width: 380px; box-shadow: var(--shadow-lg); text-align: center; }
   .gate-logo { width: 48px; height: 48px; background: var(--accent); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
   .gate-logo svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
   .gate-box h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
   .gate-box p { font-size: 13px; color: var(--txt3); margin-bottom: 1.75rem; }
   .gate-field { position: relative; margin-bottom: 12px; }
   .gate-field svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--txt3); fill: none; stroke-width: 2; stroke-linecap: round; pointer-events: none; }
-  #gate-input {
-    width: 100%; background: var(--bg3); border: 1px solid var(--line);
-    color: var(--txt); font-family: var(--font); font-size: 14px;
-    padding: 10px 12px 10px 38px; border-radius: var(--radius);
-    outline: none; transition: border-color .15s; letter-spacing: .05em;
-  }
+  #gate-input { width: 100%; background: var(--bg3); border: 1px solid var(--line); color: var(--txt); font-family: var(--font); font-size: 14px; padding: 10px 12px 10px 38px; border-radius: var(--radius); outline: none; transition: border-color .15s; letter-spacing: .05em; }
   #gate-input:focus { border-color: var(--accent); }
   #gate-input::placeholder { color: var(--txt3); letter-spacing: 0; }
   #gate-input.error { border-color: var(--red); animation: shake .3s ease; }
   #gate-error { font-size: 12px; color: var(--red); min-height: 18px; margin-bottom: 12px; }
-  .gate-btn {
-    width: 100%; background: var(--accent); color: #fff; border: none;
-    font-family: var(--font); font-size: 14px; font-weight: 500;
-    padding: 10px; border-radius: var(--radius); cursor: pointer;
-    transition: background .15s, transform .1s;
-  }
+  .gate-btn { width: 100%; background: var(--accent); color: #fff; border: none; font-family: var(--font); font-size: 14px; font-weight: 500; padding: 10px; border-radius: var(--radius); cursor: pointer; transition: background .15s, transform .1s; }
   .gate-btn:hover { background: var(--accent2); }
-  .gate-btn:active { transform: scale(.98); }
   .gate-lock { font-size: 11px; color: var(--txt3); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 5px; font-family: var(--mono); }
   .gate-lock svg { width: 12px; height: 12px; stroke: var(--txt3); fill: none; stroke-width: 2; stroke-linecap: round; }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    20% { transform: translateX(-6px); }
-    40% { transform: translateX(6px); }
-    60% { transform: translateX(-4px); }
-    80% { transform: translateX(4px); }
-  }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 
-  header {
-    background: var(--bg2); border-bottom: 1px solid var(--line);
-    padding: 0 2rem; height: 60px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-  }
+  /* ── HEADER ── */
+  header { background: var(--bg2); border-bottom: 1px solid var(--line); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .logo { display: flex; align-items: center; gap: 12px; }
   .logo-mark { width: 34px; height: 34px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
   .logo-mark svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
@@ -87,8 +58,9 @@
   .badge.green { background: var(--green-bg); border-color: rgba(45,212,160,0.3); color: var(--green); }
   .badge.red { background: var(--red-bg); border-color: rgba(245,101,101,0.3); color: var(--red); }
 
-  main { flex: 1; padding: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; }
+  main { flex: 1; padding: 2rem; max-width: 1500px; margin: 0 auto; width: 100%; }
 
+  /* ── STATS ── */
   .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 2rem; }
   .stat-card { background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; position: relative; overflow: hidden; transition: border-color .2s; }
   .stat-card:hover { border-color: var(--line2); }
@@ -97,29 +69,45 @@
   .stat-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--txt3); margin-bottom: 8px; }
   .stat-val { font-size: 28px; font-weight: 300; color: var(--txt); font-family: var(--mono); }
 
-  .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: .75rem 1rem; }
-  .search-wrap { flex: 1; position: relative; }
+  /* ── TOOLBAR ── */
+  .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: .75rem 1rem; flex-wrap: wrap; }
+  .search-wrap { flex: 1; min-width: 180px; position: relative; }
   .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--txt3); fill: none; stroke-width: 2; stroke-linecap: round; pointer-events: none; }
   .toolbar input[type="text"] { width: 100%; background: var(--bg3); border: 1px solid var(--line); color: var(--txt); font-family: var(--font); font-size: 13px; padding: 7px 10px 7px 34px; border-radius: var(--radius); outline: none; transition: border-color .15s; }
   .toolbar input[type="text"]:focus { border-color: var(--accent); }
   .toolbar input[type="text"]::placeholder { color: var(--txt3); }
   .toolbar select { background: var(--bg3); border: 1px solid var(--line); color: var(--txt2); font-family: var(--font); font-size: 13px; padding: 7px 28px 7px 10px; border-radius: var(--radius); outline: none; -webkit-appearance: none; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555a72' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; transition: border-color .15s; }
   .toolbar select:focus { border-color: var(--accent); }
-  .divider { width: 1px; height: 28px; background: var(--line2); }
+  .divider { width: 1px; height: 28px; background: var(--line2); flex-shrink: 0; }
+  .btn-toolbar { display: flex; align-items: center; gap: 6px; background: var(--bg3); border: 1px solid var(--line); color: var(--txt2); border-radius: var(--radius); font-family: var(--font); font-size: 13px; padding: 7px 13px; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; }
+  .btn-toolbar:hover { background: var(--bg4); color: var(--txt); }
+  .btn-toolbar svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+  .btn-toolbar.danger:hover { background: var(--red-bg); color: var(--red); border-color: rgba(245,101,101,0.3); }
+  .btn-toolbar.danger { display: none; }
+  .btn-toolbar.danger.visible { display: flex; }
   .btn-add { display: flex; align-items: center; gap: 7px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 16px; cursor: pointer; white-space: nowrap; transition: background .15s, transform .1s; }
   .btn-add:hover { background: var(--accent2); }
   .btn-add:active { transform: scale(.98); }
   .btn-add svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+  .bulk-count { font-size: 12px; color: var(--txt3); display: none; padding: 0 4px; }
+  .bulk-count.visible { display: block; }
 
+  /* ── TABLE ── */
   .table-wrap { background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
   table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   thead { background: var(--bg3); }
   th { padding: 11px 14px; text-align: left; font-size: 11px; font-weight: 500; color: var(--txt3); text-transform: uppercase; letter-spacing: .07em; border-bottom: 1px solid var(--line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; }
-  td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--txt); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background .1s; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--line); color: var(--txt); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background .1s; vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr.data-row:hover td { background: var(--bg3); cursor: pointer; }
+  tr.data-row.selected td { background: rgba(79,110,247,0.08); }
+  tr.data-row.selected:hover td { background: rgba(79,110,247,0.12); }
   .cell-name { display: flex; align-items: center; gap: 10px; }
-  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--bg4); border: 1px solid var(--line2); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--accent); flex-shrink: 0; font-family: var(--mono); }
+
+  /* ── AVATAR with photo ── */
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--bg4); border: 1px solid var(--line2); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--accent); flex-shrink: 0; font-family: var(--mono); overflow: hidden; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
   .chip { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
   .chip-active { background: var(--green-bg); color: var(--green); }
   .chip-inactive { background: var(--bg4); color: var(--txt3); }
@@ -132,20 +120,22 @@
   .empty-state { padding: 4rem; text-align: center; color: var(--txt3); }
   .empty-state p { font-size: 14px; }
   .empty-state span { color: var(--accent); cursor: pointer; }
-  .empty-state span:hover { text-decoration: underline; }
+  .checkbox-col { width: 40px; }
+  input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
 
+  /* ── PAGINATION ── */
   .pagination { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--txt3); }
   .page-btns { display: flex; gap: 4px; }
   .pg-btn { padding: 5px 11px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg3); font-size: 12px; cursor: pointer; color: var(--txt2); font-family: var(--mono); transition: background .15s, border-color .15s; }
   .pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .pg-btn:hover:not(.active) { background: var(--bg4); border-color: var(--line2); }
-
   .loading-row td { text-align: center; padding: 3rem; color: var(--txt3); font-size: 13px; }
   .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--line2); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ── TOAST ── */
   .toast-wrap { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
-  .toast { background: var(--bg3); border: 1px solid var(--line2); border-radius: var(--radius); padding: 10px 16px; font-size: 13px; color: var(--txt); display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s; pointer-events: none; }
+  .toast { background: var(--bg3); border: 1px solid var(--line2); border-radius: var(--radius); padding: 10px 16px; font-size: 13px; color: var(--txt); display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s; }
   .toast.show { opacity: 1; transform: none; }
   .toast.success { border-color: rgba(45,212,160,0.3); }
   .toast.error { border-color: rgba(245,101,101,0.3); }
@@ -153,9 +143,10 @@
   .toast.success .toast-dot { background: var(--green); }
   .toast.error .toast-dot { background: var(--red); }
 
+  /* ── MODAL ── */
   .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1.5rem; }
   .modal-backdrop.open { display: flex; }
-  .modal { background: var(--bg2); border: 1px solid var(--line2); border-radius: var(--radius-lg); width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: modalIn .2s ease; }
+  .modal { background: var(--bg2); border: 1px solid var(--line2); border-radius: var(--radius-lg); width: 100%; max-width: 640px; max-height: 92vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: modalIn .2s ease; }
   @keyframes modalIn { from { opacity:0; transform: translateY(12px) scale(.98); } to { opacity:1; transform: none; } }
   .modal::-webkit-scrollbar { width: 4px; }
   .modal::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
@@ -180,119 +171,167 @@
   .field select { -webkit-appearance: none; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555a72' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
   .field textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
   .modal-foot { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 1rem 1.5rem; border-top: 1px solid var(--line); position: sticky; bottom: 0; background: var(--bg2); z-index: 2; }
-  .modal-foot .record-id { flex: 1; font-family: var(--mono); font-size: 11px; color: var(--txt3); }
+  .modal-foot .record-id { flex: 1; font-family: var(--mono); font-size: 11px; color: var(--txt3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .btn-cancel { background: var(--bg3); border: 1px solid var(--line); color: var(--txt2); font-family: var(--font); font-size: 13px; padding: 8px 18px; border-radius: var(--radius); cursor: pointer; transition: background .15s; }
   .btn-cancel:hover { background: var(--bg4); }
   .btn-save { background: var(--accent); color: #fff; border: none; font-family: var(--font); font-size: 13px; font-weight: 500; padding: 8px 20px; border-radius: var(--radius); cursor: pointer; transition: background .15s, transform .1s; display: flex; align-items: center; gap: 6px; }
   .btn-save:hover { background: var(--accent2); }
-  .btn-save:active { transform: scale(.98); }
   .btn-save:disabled { opacity: .5; cursor: not-allowed; }
-  .btn-save .save-spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+  .save-spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
   .btn-save.saving .save-spinner { display: block; }
+
+  /* ── PHOTO UPLOAD ── */
+  .photo-upload-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 4px; }
+  .photo-preview { width: 72px; height: 72px; border-radius: 50%; background: var(--bg3); border: 2px dashed var(--line2); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; cursor: pointer; transition: border-color .15s; }
+  .photo-preview:hover { border-color: var(--accent); }
+  .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-preview svg { width: 24px; height: 24px; stroke: var(--txt3); fill: none; stroke-width: 1.5; }
+  .photo-actions { display: flex; flex-direction: column; gap: 6px; }
+  .photo-actions label { display: inline-flex; align-items: center; gap: 6px; background: var(--bg3); border: 1px solid var(--line); color: var(--txt2); font-size: 12px; padding: 6px 12px; border-radius: var(--radius); cursor: pointer; transition: background .15s; }
+  .photo-actions label:hover { background: var(--bg4); color: var(--txt); }
+  .photo-actions label svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .photo-hint { font-size: 11px; color: var(--txt3); }
+  .btn-remove-photo { background: none; border: none; cursor: pointer; font-size: 12px; color: var(--txt3); padding: 0; text-decoration: underline; display: none; }
+  .btn-remove-photo:hover { color: var(--red); }
+  #photo-input { display: none; }
+
+  /* ── BLOOD TYPE BADGE ── */
+  .blood-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: rgba(245,101,101,0.12); color: var(--red); border: 1px solid rgba(245,101,101,0.25); font-family: var(--mono); }
 
   footer { padding: .75rem 2rem; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--txt3); font-family: var(--mono); }
 
   @media (max-width: 900px) { .stats { grid-template-columns: repeat(2,1fr); } main { padding: 1rem; } header { padding: 0 1rem; } }
-  @media (max-width: 600px) { .stats { grid-template-columns: 1fr 1fr; } .toolbar { flex-wrap: wrap; } .divider { display: none; } .field-grid, .field-grid.cols-3 { grid-template-columns: 1fr; } .field.span2 { grid-column: span 1; } }
+  @media (max-width: 600px) { .stats { grid-template-columns: 1fr 1fr; } .field-grid, .field-grid.cols-3 { grid-template-columns: 1fr; } .field.span2 { grid-column: span 1; } }
+
+  @media print {
+    #gate, .modal-backdrop, .toast-wrap, .toolbar .btn-add, .btn-icon, .btn-toolbar, footer { display: none !important; }
+    body { background: #fff; color: #000; }
+    header { background: #fff; border-color: #ccc; position: static; }
+    .logo-name, .logo-sub { color: #000; }
+    .table-wrap { border-color: #ccc; }
+    th { background: #f5f5f5; color: #555; border-color: #ccc; }
+    td { color: #000; border-color: #eee; }
+    .avatar { background: #eee; color: #333; border-color: #ccc; }
+    .chip-active { background: #d4f5e9; color: #0a7a5a; }
+    .chip-inactive { background: #eee; color: #666; }
+    .stat-card { background: #f9f9f9; border-color: #ddd; }
+    .stat-val, .stat-label { color: #000; }
+    .badge { background: #eee; color: #555; border-color: #ccc; }
+  }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- PASSWORD GATE -->
-  <div id="gate">
-    <div class="gate-box">
-      <div class="gate-logo">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      </div>
-      <h1>PersonBase RMS</h1>
-      <p>Enter your access password to continue</p>
-      <div class="gate-field">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <input type="password" id="gate-input" placeholder="Password" autocomplete="current-password" />
-      </div>
-      <div id="gate-error"></div>
-      <button class="gate-btn" onclick="checkPassword()">Unlock Access</button>
-      <div class="gate-lock">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Secured · PersonBase RMS
-      </div>
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h1>PersonBase RMS</h1>
+    <p>Enter your access password to continue</p>
+    <div class="gate-field">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <input type="password" id="gate-input" placeholder="Password" autocomplete="current-password" />
+    </div>
+    <div id="gate-error"></div>
+    <button class="gate-btn" onclick="checkPassword()">Unlock Access</button>
+    <div class="gate-lock">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Secured · PersonBase RMS
     </div>
   </div>
-
-  <header>
-    <div class="logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
-      </div>
-      <div>
-        <div class="logo-name">PersonBase</div>
-        <div class="logo-sub">Records Management System</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <span class="badge">Supabase</span>
-      <span class="badge accent" id="conn-badge">● Connecting…</span>
-    </div>
-  </header>
-
-  <main>
-    <div class="stats">
-      <div class="stat-card"><div class="stat-label">Total Records</div><div class="stat-val" id="stat-total">—</div></div>
-      <div class="stat-card"><div class="stat-label">Active</div><div class="stat-val" id="stat-active">—</div></div>
-      <div class="stat-card"><div class="stat-label">Added This Month</div><div class="stat-val" id="stat-month">—</div></div>
-      <div class="stat-card"><div class="stat-label">Departments</div><div class="stat-val" id="stat-dept">—</div></div>
-    </div>
-
-    <div class="toolbar">
-      <div class="search-wrap">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="search-input" placeholder="Search by name, ID, address…" />
-      </div>
-      <select id="filter-dept"><option value="">All departments</option></select>
-      <select id="filter-company"><option value="">All companies</option></select>
-      <select id="filter-status"><option value="">All statuses</option><option>Active</option><option>Inactive</option></select>
-      <div class="divider"></div>
-      <button class="btn-add" onclick="openModal()">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Add Record
-      </button>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:190px">Name</th>
-            <th style="width:100px">Record ID</th>
-            <th style="width:100px">Date of Birth</th>
-            <th style="width:120px">Phone</th>
-            <th style="width:160px">Address</th>
-            <th style="width:150px">Parent / Guardian</th>
-            <th style="width:110px">Department</th>
-            <th style="width:130px">Company / Group</th>
-            <th style="width:80px">Status</th>
-            <th style="width:44px"></th>
-          </tr>
-        </thead>
-        <tbody id="table-body">
-          <tr class="loading-row"><td colspan="10"><span class="spinner"></span>Loading records…</td></tr>
-        </tbody>
-      </table>
-      <div class="pagination">
-        <span id="page-info">Loading…</span>
-        <div class="page-btns" id="page-btns"></div>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <span>PersonBase RMS © 2025 · Supabase Backend</span>
-    <span id="footer-ts"></span>
-  </footer>
 </div>
 
-<!-- TOAST -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+    </div>
+    <div>
+      <div class="logo-name">PersonBase</div>
+      <div class="logo-sub">Records Management System</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="badge">Supabase</span>
+    <span class="badge accent" id="conn-badge">● Connecting…</span>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat-card"><div class="stat-label">Total Records</div><div class="stat-val" id="stat-total">—</div></div>
+    <div class="stat-card"><div class="stat-label">Active</div><div class="stat-val" id="stat-active">—</div></div>
+    <div class="stat-card"><div class="stat-label">Added This Month</div><div class="stat-val" id="stat-month">—</div></div>
+    <div class="stat-card"><div class="stat-label">Departments</div><div class="stat-val" id="stat-dept">—</div></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="Search by name, ID, address, company…" />
+    </div>
+    <select id="filter-dept"><option value="">All departments</option></select>
+    <select id="filter-company"><option value="">All companies</option></select>
+    <select id="filter-status"><option value="">All statuses</option><option>Active</option><option>Inactive</option></select>
+    <div class="divider"></div>
+    <span class="bulk-count" id="bulk-count"></span>
+    <button class="btn-toolbar danger" id="btn-bulk-delete" onclick="bulkDelete()">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      Delete Selected
+    </button>
+    <button class="btn-toolbar" onclick="exportCSV()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export CSV
+    </button>
+    <button class="btn-toolbar" onclick="window.print()">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print
+    </button>
+    <div class="divider"></div>
+    <button class="btn-add" onclick="openModal()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Record
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="checkbox-col"><input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" /></th>
+          <th style="width:190px">Name</th>
+          <th style="width:90px">Record ID</th>
+          <th style="width:90px">DOB</th>
+          <th style="width:90px">Blood</th>
+          <th style="width:115px">Phone</th>
+          <th style="width:150px">Address</th>
+          <th style="width:140px">Parent / Guardian</th>
+          <th style="width:100px">Department</th>
+          <th style="width:120px">Company / Group</th>
+          <th style="width:75px">Status</th>
+          <th style="width:44px"></th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <tr class="loading-row"><td colspan="12"><span class="spinner"></span>Loading records…</td></tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <span id="page-info">Loading…</span>
+      <div class="page-btns" id="page-btns"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>PersonBase RMS © 2025 · Supabase Backend</span>
+  <span id="footer-ts"></span>
+</footer>
+</div>
+
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <!-- MODAL -->
@@ -309,6 +348,30 @@
     </div>
 
     <div class="modal-body">
+
+      <!-- PHOTO -->
+      <div class="form-section">
+        <div class="section-label">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Profile Photo
+        </div>
+        <div class="photo-upload-wrap">
+          <div class="photo-preview" id="photo-preview-circle" onclick="document.getElementById('photo-input').click()">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="photo-actions">
+            <label for="photo-input">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload Photo
+            </label>
+            <span class="photo-hint">JPG, PNG or GIF · Max 2MB</span>
+            <button class="btn-remove-photo" id="btn-remove-photo" onclick="removePhoto()">Remove photo</button>
+          </div>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" onchange="handlePhotoUpload(this)" />
+      </div>
+
+      <!-- PERSONAL -->
       <div class="form-section">
         <div class="section-label">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -328,6 +391,24 @@
         </div>
       </div>
 
+      <!-- MEDICAL -->
+      <div class="form-section">
+        <div class="section-label">
+          <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Medical Information
+        </div>
+        <div class="field-grid">
+          <div class="field"><label>Blood Type</label>
+            <select id="f-blood"><option value="">— Unknown —</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
+          </div>
+          <div class="field"><label>Allergies</label><input id="f-allergies" placeholder="e.g. Penicillin, Peanuts" /></div>
+          <div class="field"><label>Medical Conditions</label><input id="f-conditions" placeholder="e.g. Asthma, Diabetes" /></div>
+          <div class="field"><label>Medications</label><input id="f-medications" placeholder="e.g. Albuterol 90mcg" /></div>
+          <div class="field span2"><label>Doctor / Physician Name &amp; Phone</label><input id="f-doctor" placeholder="e.g. Dr. Jane Smith · (304) 555-0100" /></div>
+        </div>
+      </div>
+
+      <!-- ADDRESS -->
       <div class="form-section">
         <div class="section-label">
           <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
@@ -342,6 +423,7 @@
         <div class="field-grid full" style="margin-top:12px"><div class="field"><label>Country</label><input id="f-country" placeholder="Country" value="United States" /></div></div>
       </div>
 
+      <!-- GUARDIAN -->
       <div class="form-section">
         <div class="section-label">
           <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -357,6 +439,7 @@
         </div>
       </div>
 
+      <!-- EMERGENCY -->
       <div class="form-section">
         <div class="section-label">
           <svg viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -369,6 +452,21 @@
         </div>
       </div>
 
+      <!-- SOCIAL MEDIA -->
+      <div class="form-section">
+        <div class="section-label">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Social Media &amp; Links
+        </div>
+        <div class="field-grid">
+          <div class="field"><label>Instagram</label><input id="f-instagram" placeholder="@username" /></div>
+          <div class="field"><label>Facebook</label><input id="f-facebook" placeholder="facebook.com/username" /></div>
+          <div class="field"><label>LinkedIn</label><input id="f-linkedin" placeholder="linkedin.com/in/username" /></div>
+          <div class="field"><label>Website / Other</label><input id="f-website" placeholder="https://example.com" /></div>
+        </div>
+      </div>
+
+      <!-- COMPANY -->
       <div class="form-section">
         <div class="section-label">
           <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h20"/></svg>
@@ -376,12 +474,13 @@
         </div>
         <div class="field-grid">
           <div class="field"><label>Company / Group Name</label><input id="f-company" placeholder="e.g. Acme Corp, Team Alpha" /></div>
-          <div class="field"><label>Rank / Role in Group</label><input id="f-rank" placeholder="e.g. Manager, Captain, Intern" /></div>
+          <div class="field"><label>Rank / Role in Group</label><input id="f-rank" placeholder="e.g. Manager, Captain" /></div>
           <div class="field"><label>Group ID / Code</label><input id="f-group-id" placeholder="e.g. GRP-001" /></div>
           <div class="field"><label>Division / Unit</label><input id="f-division" placeholder="e.g. Sales, North Division" /></div>
         </div>
       </div>
 
+      <!-- ENROLLMENT -->
       <div class="form-section">
         <div class="section-label">
           <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -391,9 +490,10 @@
           <div class="field"><label>Enrollment / Start Date</label><input id="f-enroll" type="date" /></div>
           <div class="field"><label>Record Status</label><select id="f-status"><option>Active</option><option>Inactive</option></select></div>
         </div>
-        <div class="field-grid full" style="margin-top:12px"><div class="field"><label>Notes</label><textarea id="f-notes" placeholder="Any additional notes, medical info, accommodations…"></textarea></div></div>
+        <div class="field-grid full" style="margin-top:12px"><div class="field"><label>Notes</label><textarea id="f-notes" placeholder="Any additional notes, accommodations…"></textarea></div></div>
       </div>
-    </div>
+
+    </div><!-- /modal-body -->
 
     <div class="modal-foot">
       <span class="record-id" id="modal-record-id"></span>
@@ -407,9 +507,8 @@
 </div>
 
 <script>
-// ── PASSWORD GATE ──
+// ── PASSWORD ──
 const CORRECT_PASSWORD = 'Ark720039483';
-
 function checkPassword() {
   const input = document.getElementById('gate-input');
   const errEl = document.getElementById('gate-error');
@@ -424,7 +523,6 @@ function checkPassword() {
     input.focus();
   }
 }
-
 document.getElementById('gate-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkPassword();
   document.getElementById('gate-error').textContent = '';
@@ -435,12 +533,14 @@ const SUPA_URL = 'https://vpfjkwixanosuyubxkkq.supabase.co/rest/v1';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwZmprd2l4YW5vc3V5dWJ4a2txIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODkyMjIsImV4cCI6MjA5NDk2NTIyMn0.2jl16Rz170II2i-QVsXnRjJUoyoCYnEcfNzF9FdxbQ4';
 const HEADERS = { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
 const TABLE = 'persons';
+const STORAGE_BUCKET = 'avatars';
 
-let allRecords = [];
-let editId = null;
-let page = 1;
+let allRecords = [], editId = null, page = 1;
 const PER = 10;
 let searchQ = '', filterDept = '', filterStatus = '', filterCompany = '';
+let selectedIds = new Set();
+let pendingPhotoBase64 = null; // base64 data URI for new upload
+let pendingPhotoRemoved = false;
 
 async function apiFetch(path, opts = {}) {
   const res = await fetch(`${SUPA_URL}/${path}`, { headers: HEADERS, ...opts });
@@ -449,6 +549,66 @@ async function apiFetch(path, opts = {}) {
   return res.json();
 }
 
+// ── STORAGE: upload avatar ──
+async function uploadAvatar(recordId, base64DataUri) {
+  // Extract base64 content and mime type
+  const match = base64DataUri.match(/^data:(.+);base64,(.+)$/);
+  if (!match) return null;
+  const mimeType = match[1];
+  const ext = mimeType.split('/')[1] || 'jpg';
+  const base64 = match[2];
+  const byteChars = atob(base64);
+  const byteArr = new Uint8Array(byteChars.length);
+  for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+  const blob = new Blob([byteArr], { type: mimeType });
+  const filePath = `${recordId}.${ext}`;
+
+  const storageUrl = `https://vpfjkwixanosuyubxkkq.supabase.co/storage/v1/object/${STORAGE_BUCKET}/${filePath}`;
+  const res = await fetch(storageUrl, {
+    method: 'POST',
+    headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': mimeType, 'x-upsert': 'true' },
+    body: blob
+  });
+  if (!res.ok) throw new Error('Photo upload failed');
+  return `https://vpfjkwixanosuyubxkkq.supabase.co/storage/v1/object/public/${STORAGE_BUCKET}/${filePath}`;
+}
+
+async function deleteAvatar(photoUrl) {
+  if (!photoUrl) return;
+  const parts = photoUrl.split(`/object/public/${STORAGE_BUCKET}/`);
+  if (parts.length < 2) return;
+  const filePath = parts[1];
+  await fetch(`https://vpfjkwixanosuyubxkkq.supabase.co/storage/v1/object/${STORAGE_BUCKET}/${filePath}`, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }
+  }).catch(() => {});
+}
+
+// ── PHOTO UI ──
+function handlePhotoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { toast('Photo must be under 2MB.', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    pendingPhotoBase64 = e.target.result;
+    pendingPhotoRemoved = false;
+    const preview = document.getElementById('photo-preview-circle');
+    preview.innerHTML = `<img src="${pendingPhotoBase64}" alt="Preview" />`;
+    document.getElementById('btn-remove-photo').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+function removePhoto() {
+  pendingPhotoBase64 = null;
+  pendingPhotoRemoved = true;
+  const preview = document.getElementById('photo-preview-circle');
+  preview.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  document.getElementById('btn-remove-photo').style.display = 'none';
+  document.getElementById('photo-input').value = '';
+}
+
+// ── LOAD ──
 async function loadAll() {
   setBadge('connecting');
   try {
@@ -459,7 +619,7 @@ async function loadAll() {
   } catch(e) {
     setBadge('error');
     toast('Failed to load: ' + e.message, 'error');
-    document.getElementById('table-body').innerHTML = `<tr class="loading-row"><td colspan="10">Could not connect to database.</td></tr>`;
+    document.getElementById('table-body').innerHTML = `<tr class="loading-row"><td colspan="12">Could not connect to database.</td></tr>`;
     document.getElementById('page-info').textContent = 'Error';
   }
 }
@@ -477,10 +637,11 @@ function toast(msg, type = 'success') {
   el.className = `toast ${type}`;
   el.innerHTML = `<span class="toast-dot"></span>${msg}`;
   wrap.appendChild(el);
-  requestAnimationFrame(() => { requestAnimationFrame(() => el.classList.add('show')); });
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
   setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 3000);
 }
 
+// ── FILTER ──
 function getFiltered() {
   const q = searchQ.toLowerCase();
   return allRecords.filter(r => {
@@ -488,7 +649,8 @@ function getFiltered() {
     const mQ = !q || name.includes(q) || (r.record_id||'').toLowerCase().includes(q)
       || (r.street||'').toLowerCase().includes(q) || (r.city||'').toLowerCase().includes(q)
       || (r.guardian_name||'').toLowerCase().includes(q)
-      || (r.company||'').toLowerCase().includes(q) || (r.rank||'').toLowerCase().includes(q);
+      || (r.company||'').toLowerCase().includes(q) || (r.rank||'').toLowerCase().includes(q)
+      || (r.allergies||'').toLowerCase().includes(q) || (r.conditions||'').toLowerCase().includes(q);
     return mQ && (!filterDept || r.department === filterDept)
       && (!filterStatus || r.status === filterStatus)
       && (!filterCompany || r.company === filterCompany);
@@ -499,6 +661,7 @@ function initials(f, l) {
   return ((f||'')[0]||'').toUpperCase() + ((l||'')[0]||'').toUpperCase();
 }
 
+// ── RENDER ──
 function render() {
   const filtered = getFiltered();
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER));
@@ -507,31 +670,39 @@ function render() {
 
   const tbody = document.getElementById('table-body');
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><p>No records found. <span onclick="openModal()">Add the first one →</span></p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="12"><div class="empty-state"><p>No records found. <span onclick="openModal()">Add the first one →</span></p></div></td></tr>`;
   } else {
     tbody.innerHTML = slice.map(r => {
       const ini = initials(r.first_name, r.last_name);
       const addr = [r.street, r.city].filter(Boolean).join(', ') || '—';
+      const isSelected = selectedIds.has(r.id);
       const companyCell = r.company
         ? `<span class="chip chip-company">${r.company}</span>${r.rank ? `<span class="rank-tag">${r.rank}</span>` : ''}`
         : '—';
-      return `<tr class="data-row" onclick="openModal('${r.id}')">
-        <td><div class="cell-name"><span class="avatar">${ini||'?'}</span>${r.first_name||''} ${r.last_name||''}</div></td>
+      const avatarInner = r.photo_url
+        ? `<img src="${r.photo_url}" alt="${ini}" onerror="this.parentElement.textContent='${ini}'" />`
+        : ini || '?';
+      const bloodCell = r.blood_type ? `<span class="blood-badge">${r.blood_type}</span>` : '—';
+      return `<tr class="data-row${isSelected?' selected':''}" onclick="openModal('${r.id}')">
+        <td onclick="event.stopPropagation()"><input type="checkbox" ${isSelected?'checked':''} onchange="toggleSelect('${r.id}', this.checked)" /></td>
+        <td><div class="cell-name"><span class="avatar">${avatarInner}</span>${r.first_name||''} ${r.last_name||''}</div></td>
         <td class="mono">${r.record_id||'—'}</td>
         <td class="mono">${r.dob||'—'}</td>
+        <td>${bloodCell}</td>
         <td>${r.phone||'—'}</td>
         <td title="${addr}">${addr}</td>
         <td title="${r.guardian_name||''}">${r.guardian_name||'—'}</td>
         <td>${r.department||'—'}</td>
         <td>${companyCell}</td>
         <td><span class="chip ${r.status==='Active'?'chip-active':'chip-inactive'}">${r.status||'—'}</span></td>
-        <td><button class="btn-icon" onclick="delRecord(event,'${r.id}')" title="Delete">
+        <td><button class="btn-icon" onclick="delRecord(event,'${r.id}','${r.photo_url||''}')" title="Delete">
           <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
         </button></td>
       </tr>`;
     }).join('');
   }
 
+  // stats
   const now = new Date();
   const thisMonth = allRecords.filter(r => {
     if (!r.created_at) return false;
@@ -565,27 +736,122 @@ function render() {
     b.onclick = () => { page = p2; render(); };
     pb.appendChild(b);
   }
+
+  updateBulkUI();
 }
 
+// ── SELECTION ──
+function toggleSelect(id, checked) {
+  if (checked) selectedIds.add(id); else selectedIds.delete(id);
+  const row = document.querySelector(`tr[onclick="openModal('${id}')"]`);
+  if (row) row.classList.toggle('selected', checked);
+  updateBulkUI();
+}
+function toggleSelectAll(cb) {
+  const filtered = getFiltered();
+  const slice = filtered.slice((page-1)*PER, page*PER);
+  slice.forEach(r => { if (cb.checked) selectedIds.add(r.id); else selectedIds.delete(r.id); });
+  render();
+}
+function updateBulkUI() {
+  const n = selectedIds.size;
+  const btn = document.getElementById('btn-bulk-delete');
+  const cnt = document.getElementById('bulk-count');
+  if (n > 0) {
+    btn.classList.add('visible');
+    cnt.classList.add('visible');
+    cnt.textContent = `${n} selected`;
+  } else {
+    btn.classList.remove('visible');
+    cnt.classList.remove('visible');
+  }
+  const allChk = document.getElementById('select-all');
+  if (allChk) {
+    const filtered = getFiltered();
+    const slice = filtered.slice((page-1)*PER, page*PER);
+    allChk.checked = slice.length > 0 && slice.every(r => selectedIds.has(r.id));
+    allChk.indeterminate = !allChk.checked && slice.some(r => selectedIds.has(r.id));
+  }
+}
+
+async function bulkDelete() {
+  const n = selectedIds.size;
+  if (!n) return;
+  if (!confirm(`Delete ${n} selected record${n>1?'s':''}? This cannot be undone.`)) return;
+  const ids = [...selectedIds];
+  try {
+    // Delete photos first
+    const toDelete = allRecords.filter(r => ids.includes(r.id));
+    await Promise.allSettled(toDelete.map(r => r.photo_url ? deleteAvatar(r.photo_url) : Promise.resolve()));
+    // Delete rows — Supabase in() filter
+    await apiFetch(`${TABLE}?id=in.(${ids.join(',')})`, { method: 'DELETE' });
+    allRecords = allRecords.filter(r => !ids.includes(r.id));
+    selectedIds.clear();
+    toast(`${n} record${n>1?'s':''} deleted.`);
+    render();
+  } catch(e) {
+    toast('Bulk delete failed: ' + e.message, 'error');
+  }
+}
+
+// ── EXPORT CSV ──
+function exportCSV() {
+  const filtered = getFiltered();
+  const cols = ['id','record_id','first_name','last_name','dob','gender','blood_type','allergies','conditions','medications','doctor','email','phone','street','city','state','zip','country','guardian_name','guardian_rel','guardian_phone','guardian_email','emergency_name','emergency_rel','emergency_phone','department','company','rank','group_id','division','instagram','facebook','linkedin','website','enrolled_date','status','notes','created_at'];
+  const header = cols.join(',');
+  const rows = filtered.map(r => cols.map(c => {
+    const val = r[c] == null ? '' : String(r[c]);
+    return val.includes(',') || val.includes('"') || val.includes('\n') ? `"${val.replace(/"/g,'""')}"` : val;
+  }).join(','));
+  const csv = [header, ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `personbase_export_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  toast(`Exported ${filtered.length} record${filtered.length!==1?'s':''} to CSV.`);
+}
+
+// ── MODAL ──
 function openModal(id) {
   editId = id || null;
+  pendingPhotoBase64 = null;
+  pendingPhotoRemoved = false;
   const isEdit = editId !== null;
   const r = isEdit ? allRecords.find(x => x.id === id) || {} : {};
   document.getElementById('modal-title').textContent = isEdit ? 'Edit Record' : 'New Record';
   document.getElementById('modal-sub').textContent = isEdit ? 'Update the fields below.' : 'Fill in the fields below to create a new record.';
   document.getElementById('modal-record-id').textContent = isEdit ? `UUID: ${r.id}` : '';
+
+  // Reset photo preview
+  const preview = document.getElementById('photo-preview-circle');
+  const removeBtn = document.getElementById('btn-remove-photo');
+  if (r.photo_url) {
+    preview.innerHTML = `<img src="${r.photo_url}" alt="Photo" onerror="this.parentElement.innerHTML='<svg viewBox=\\"0 0 24 24\\"><path d=\\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\\"/><circle cx=\\"12\\" cy=\\"7\\" r=\\"4\\"/></svg>'" />`;
+    removeBtn.style.display = 'block';
+  } else {
+    preview.innerHTML = `<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+    removeBtn.style.display = 'none';
+  }
+  document.getElementById('photo-input').value = '';
+
   const map = {
     'f-first': r.first_name, 'f-last': r.last_name, 'f-dob': r.dob, 'f-gender': r.gender,
     'f-rid': r.record_id, 'f-dept': r.department, 'f-email': r.email, 'f-phone': r.phone,
     'f-street': r.street, 'f-city': r.city, 'f-state': r.state, 'f-zip': r.zip,
-    'f-country': r.country || 'United States', 'f-guardian': r.guardian_name, 'f-rel': r.guardian_rel,
+    'f-country': r.country || 'United States',
+    'f-guardian': r.guardian_name, 'f-rel': r.guardian_rel,
     'f-gphone': r.guardian_phone, 'f-gemail': r.guardian_email,
     'f-ename': r.emergency_name, 'f-erel': r.emergency_rel, 'f-ephone': r.emergency_phone,
     'f-enroll': r.enrolled_date, 'f-status': r.status || 'Active', 'f-notes': r.notes,
-    'f-company': r.company, 'f-rank': r.rank, 'f-group-id': r.group_id, 'f-division': r.division
+    'f-company': r.company, 'f-rank': r.rank, 'f-group-id': r.group_id, 'f-division': r.division,
+    'f-blood': r.blood_type, 'f-allergies': r.allergies,
+    'f-conditions': r.conditions, 'f-medications': r.medications, 'f-doctor': r.doctor,
+    'f-instagram': r.instagram, 'f-facebook': r.facebook, 'f-linkedin': r.linkedin, 'f-website': r.website
   };
   Object.entries(map).forEach(([fid, val]) => { const el = document.getElementById(fid); if (el) el.value = val || ''; });
   document.getElementById('modal').classList.add('open');
+  document.getElementById('modal').scrollTop = 0;
 }
 
 function closeModal() { document.getElementById('modal').classList.remove('open'); editId = null; }
@@ -596,27 +862,52 @@ async function saveRecord() {
   const first = g('f-first').trim(), last = g('f-last').trim();
   if (!first && !last) { toast('First or last name is required.', 'error'); return; }
 
-  const payload = {
-    first_name: first, last_name: last,
-    dob: g('f-dob') || null, gender: g('f-gender') || null,
-    record_id: g('f-rid') || null, department: g('f-dept') || null,
-    email: g('f-email') || null, phone: g('f-phone') || null,
-    street: g('f-street') || null, city: g('f-city') || null,
-    state: g('f-state') || null, zip: g('f-zip') || null, country: g('f-country') || null,
-    guardian_name: g('f-guardian') || null, guardian_rel: g('f-rel') || null,
-    guardian_phone: g('f-gphone') || null, guardian_email: g('f-gemail') || null,
-    emergency_name: g('f-ename') || null, emergency_rel: g('f-erel') || null,
-    emergency_phone: g('f-ephone') || null,
-    enrolled_date: g('f-enroll') || null, status: g('f-status') || 'Active',
-    notes: g('f-notes') || null,
-    company: g('f-company') || null, rank: g('f-rank') || null,
-    group_id: g('f-group-id') || null, division: g('f-division') || null
-  };
-
   const btn = document.getElementById('btn-save');
   btn.classList.add('saving'); btn.disabled = true;
 
   try {
+    let photoUrl = null;
+    if (editId) {
+      const existing = allRecords.find(r => r.id === editId);
+      photoUrl = existing?.photo_url || null;
+    }
+
+    // Handle photo
+    if (pendingPhotoBase64) {
+      // Upload new photo — need the record id. For new records, we'll insert first, then upload.
+      if (editId) {
+        if (photoUrl) await deleteAvatar(photoUrl).catch(() => {});
+        photoUrl = await uploadAvatar(editId, pendingPhotoBase64);
+      }
+      // For new records, we handle after insert below
+    } else if (pendingPhotoRemoved && photoUrl) {
+      await deleteAvatar(photoUrl).catch(() => {});
+      photoUrl = null;
+    }
+
+    const payload = {
+      first_name: first, last_name: last,
+      dob: g('f-dob') || null, gender: g('f-gender') || null,
+      record_id: g('f-rid') || null, department: g('f-dept') || null,
+      email: g('f-email') || null, phone: g('f-phone') || null,
+      street: g('f-street') || null, city: g('f-city') || null,
+      state: g('f-state') || null, zip: g('f-zip') || null, country: g('f-country') || null,
+      guardian_name: g('f-guardian') || null, guardian_rel: g('f-rel') || null,
+      guardian_phone: g('f-gphone') || null, guardian_email: g('f-gemail') || null,
+      emergency_name: g('f-ename') || null, emergency_rel: g('f-erel') || null,
+      emergency_phone: g('f-ephone') || null,
+      enrolled_date: g('f-enroll') || null, status: g('f-status') || 'Active',
+      notes: g('f-notes') || null,
+      company: g('f-company') || null, rank: g('f-rank') || null,
+      group_id: g('f-group-id') || null, division: g('f-division') || null,
+      blood_type: g('f-blood') || null, allergies: g('f-allergies') || null,
+      conditions: g('f-conditions') || null, medications: g('f-medications') || null,
+      doctor: g('f-doctor') || null,
+      instagram: g('f-instagram') || null, facebook: g('f-facebook') || null,
+      linkedin: g('f-linkedin') || null, website: g('f-website') || null,
+      photo_url: photoUrl
+    };
+
     if (editId) {
       const updated = await apiFetch(`${TABLE}?id=eq.${editId}`, { method: 'PATCH', body: JSON.stringify(payload) });
       const idx = allRecords.findIndex(r => r.id === editId);
@@ -624,7 +915,18 @@ async function saveRecord() {
       toast('Record updated successfully.');
     } else {
       const created = await apiFetch(TABLE, { method: 'POST', body: JSON.stringify(payload) });
-      if (created?.[0]) allRecords.unshift(created[0]);
+      const newRecord = created?.[0];
+      if (newRecord) {
+        // Now upload photo if pending
+        if (pendingPhotoBase64) {
+          const uploadedUrl = await uploadAvatar(newRecord.id, pendingPhotoBase64).catch(() => null);
+          if (uploadedUrl) {
+            const patched = await apiFetch(`${TABLE}?id=eq.${newRecord.id}`, { method: 'PATCH', body: JSON.stringify({ photo_url: uploadedUrl }) });
+            if (patched?.[0]) { newRecord.photo_url = uploadedUrl; }
+          }
+        }
+        allRecords.unshift(newRecord);
+      }
       toast('Record created successfully.');
     }
     closeModal();
@@ -636,12 +938,14 @@ async function saveRecord() {
   }
 }
 
-async function delRecord(e, id) {
+async function delRecord(e, id, photoUrl) {
   e.stopPropagation();
   if (!confirm('Delete this record? This cannot be undone.')) return;
   try {
+    if (photoUrl) await deleteAvatar(photoUrl).catch(() => {});
     await apiFetch(`${TABLE}?id=eq.${id}`, { method: 'DELETE' });
     allRecords = allRecords.filter(r => r.id !== id);
+    selectedIds.delete(id);
     toast('Record deleted.');
     render();
   } catch(err) {
@@ -649,6 +953,7 @@ async function delRecord(e, id) {
   }
 }
 
+// ── EVENTS ──
 let searchTimer;
 document.getElementById('search-input').addEventListener('input', e => {
   clearTimeout(searchTimer);
@@ -661,8 +966,6 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
 function tick() { document.getElementById('footer-ts').textContent = new Date().toLocaleString(); }
 tick(); setInterval(tick, 1000);
-
-// NOTE: loadAll() is now called only after successful password entry
 </script>
 </body>
 </html>
